@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Fuse
 import SVGKit
 import SwiftCSV
 
@@ -33,7 +34,7 @@ class Service {
     }
 }
 
-struct Item {
+struct Item: Fuseable, Hashable {
     let data: [String: String]
 
     var barcode: String {
@@ -43,13 +44,32 @@ struct Item {
     var name: String {
         data["제품명"] ?? ""
     }
+
+    var brand: String {
+        data["브랜드"] ?? ""
+    }
+
+    var properties: [FuseProperty] {
+        return [
+            FuseProperty(name: name, weight: 1.0),
+        ]
+    }
+}
+
+enum DatabaseError: Error {
+    case malformed
 }
 
 class Database {
+    let fuse = Fuse()
     let items: [Item]
+    let names: [String]
 
     init(items: [Item]) throws {
         self.items = items
+        names = items.map {
+            $0.name
+        }
     }
 
     convenience init() throws {
@@ -58,7 +78,6 @@ class Database {
         var items: [Item] = []
         try csv.enumerateAsDict {
             items.append(Item(data: $0))
-            print($0)
         }
         try self.init(items: items)
     }
@@ -67,8 +86,10 @@ class Database {
         items.first(where: { $0.barcode == barcode })
     }
 
-    func search(keyword _: String) -> [Item] {
-        []
+    func search(keyword: String) -> [Item] {
+        fuse.search(keyword, in: names).map {
+            items[$0.index]
+        }
     }
 }
 

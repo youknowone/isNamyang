@@ -21,15 +21,10 @@ struct LogoImage: View {
 
 struct ContentView: View {
     var body: some View {
-        //                .onRead
-        //                .overlay(
-        //                    Text("여기에 바코드")
-        //                )
-
         return
-            NavigationView {
-                MainView()
-            }
+            // NavigationView {
+            MainView()
+        // }
     }
 }
 
@@ -42,12 +37,17 @@ struct FrameView<Content: View>: View {
             ZStack {
                 Rectangle().fill(Color(UIColor.systemBackground))
                     .shadow(radius: 20)
-                    .frame(minHeight: geometry.size.width * 0.5, maxHeight: geometry.size.width)
+                    .frame(maxWidth: self.maxWidth(geometry), minHeight: self.maxWidth(geometry) * 0.5, maxHeight: self.maxWidth(geometry))
 
                 self.viewBuilder()
-            }.frame(minHeight: geometry.size.width * 0.5, maxHeight: geometry.size.width)
-                .padding()
+            }
+            .frame(maxWidth: self.maxWidth(geometry), minHeight: self.maxWidth(geometry) * 0.5, maxHeight: self.maxWidth(geometry))
+            .padding()
         }
+    }
+
+    func maxWidth(_ geometry: GeometryProxy) -> CGFloat {
+        min(480, geometry.size.width)
     }
 }
 
@@ -57,7 +57,9 @@ struct MainView: View {
     @State var keyword: String = ""
     @State var productName: String = ""
     @State var showsResult: Bool = false
+    @State var toast: Bool = true
 
+    @State var searchResult: [Item]?
     @State var searchedItem: Item?
 
     var body: some View {
@@ -68,7 +70,6 @@ struct MainView: View {
                 self.keyword = $0
                 self.checkKeyword()
             }
-        captureEnabled = captureView.error == nil
 
         return VStack {
             FrameView {
@@ -80,7 +81,7 @@ struct MainView: View {
                     ZStack {
                         VStack {
                             if !self.captureEnabled {
-                                Text("카메라 권한에 동의하여야 바코드 스캔 기능을 이용할 수 있습니다. 카메라를 이용하지 않으려면 아래에서 수동으로 입력해 주세요.")
+                                Text("카메라 권한에 동의하여야 바코드 스캔 기능을 이용할 수 있습니다. 카메라를 이용하지 않으려면 아래에서 수동으로 입력해 주세요\n")
                             }
                             TextField("제품 이름이나 바코드 입력", text: self.$keyword, onCommit: self.checkKeyword)
                                 .textFieldStyle(RoundedBorderTextFieldStyle())
@@ -129,18 +130,40 @@ struct MainView: View {
                 }.padding()
             }
             Spacer()
-            if Service.logoImage != nil {
-                LogoImage()
-            } else {
-                Text("남 양 유 없").font(.system(size: 80))
-                    .fontWeight(.bold).padding()
-            }
+            ZStack(alignment: .bottom) {
+                VStack {
+                    Text("\(service.database.items.count)개의 제품 목록을 가져왔습니다")
+                        .opacity(self.toast ? 1 : 0)
+                    if Service.logoImage != nil {
+                        LogoImage()
+                    } else {
+                        Text("남 양 유 없").font(.system(size: 80))
+                            .fontWeight(.bold).padding()
+                    }
+                }
+                List {
+                    ForEach(searchResult ?? [], id: \.self) {
+                        item in
+                        Button(action: {
+                            self.searchedItem = item
+                            self.showsResult = true
+                            self.searchResult = nil
+                        }) {
+                            Text("\(item.name) \(item.brand)")
+                        }
+                    }
+                }
+                .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+                .offset(y: self.searchResult == nil ? 400 : 0)
+            }.frame(maxHeight: 280)
         }
         .background(Color.white)
         .navigationBarTitle("")
         .navigationBarHidden(true)
         .onAppear {
+            self.captureEnabled = captureView.error == nil
             self.capturing = self.captureEnabled
+            withAnimation(.linear(duration: 1.2)) { self.toast.toggle() }
         }
         .sheet(isPresented: $showsResult) {
             ResultView(item: self.$searchedItem, keyword: self.$keyword)
@@ -148,11 +171,12 @@ struct MainView: View {
     }
 
     func checkKeyword() {
-        if let item = service.database.search(barcode: self.keyword) {
-            searchedItem = item
+        let isBarcode = [9, 13].contains(keyword.count) && CharacterSet.decimalDigits.isSuperset(of: CharacterSet(charactersIn: keyword))
+        if isBarcode {
+            searchedItem = service.database.search(barcode: keyword)
             showsResult = true
         } else {
-            showsResult = true
+            searchResult = service.database.search(keyword: keyword)
         }
         capturing = captureEnabled
     }

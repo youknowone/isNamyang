@@ -22,10 +22,10 @@ struct TadaView: View {
     @Binding var isShowing: Bool
     var body: some View {
         HStack {
-            PartyPopperView().offset(x: self.isShowing ? 0 : -120, y: 20)
+            PartyPopperView().offset(x: self.isShowing ? 0 : -220, y: 20)
             PartyPopperView().offset(x: self.isShowing ? 0 : -40, y: self.isShowing ? -20 : -150)
             PartyPopperView().offset(x: self.isShowing ? 0 : 40, y: self.isShowing ? -20 : -150)
-            PartyPopperView().offset(x: self.isShowing ? 0 : 120, y: 20)
+            PartyPopperView().offset(x: self.isShowing ? 0 : 220, y: 20)
         }
     }
 }

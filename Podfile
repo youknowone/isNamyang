@@ -5,9 +5,10 @@ target 'isNamyang' do
   # Comment the next line if you don't want to use dynamic frameworks
   use_frameworks!
 
+  # Pods for isNamyang
+  pod 'Fuse'
   pod 'SwiftCSV'
   pod 'SVGKit'
-  # Pods for isNamyang
 
   target 'isNamyangTests' do
     inherit! :search_paths

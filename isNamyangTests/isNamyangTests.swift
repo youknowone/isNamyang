@@ -27,6 +27,12 @@ class isNamyangTests: XCTestCase {
         XCTAssertEqual(item.name, "루카스나인 리저브 드립 인 스틱 과테말라 안티구아 블렌드")
     }
 
+    func testKeyword() {
+        let keyword = "맛있는"
+        let item = service.database.search(keyword: keyword).first!
+        XCTAssertTrue(item.name.contains(keyword))
+    }
+
     func testPerformanceExample() {
         // This is an example of a performance test case.
         measure {

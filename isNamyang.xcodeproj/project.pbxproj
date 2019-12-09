@@ -18,8 +18,8 @@
 		38F04B9F239D5641003D7B0D /* isNamyangUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F04B9E239D5641003D7B0D /* isNamyangUITests.swift */; };
 		38F04BAD239D5934003D7B0D /* CaptureView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F04BAC239D5934003D7B0D /* CaptureView.swift */; };
 		38F04BEC239D943C003D7B0D /* Network.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F04BEB239D943C003D7B0D /* Network.swift */; };
-		38F04BEE239E9FAA003D7B0D /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F04BED239E9FAA003D7B0D /* LoadingView.swift */; };
 		38F04BF0239EAE86003D7B0D /* EffectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F04BEF239EAE86003D7B0D /* EffectView.swift */; };
+		38F04BF2239EC0BD003D7B0D /* NetworkErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 38F04BF1239EC0BD003D7B0D /* NetworkErrorView.swift */; };
 		68B1F36C0F570F9615837CD1 /* Pods_isNamyang_isNamyangUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 94FFEB02E7B04A20BC932F87 /* Pods_isNamyang_isNamyangUITests.framework */; };
 		FCAB3A058D2839CF6413CB2B /* Pods_isNamyang.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7A9D77DAA19EE42A996C0DBE /* Pods_isNamyang.framework */; };
 /* End PBXBuildFile section */
@@ -43,7 +43,7 @@
 
 /* Begin PBXFileReference section */
 		18A3E9F812CC70CD9351F91D /* Pods-isNamyang.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-isNamyang.debug.xcconfig"; path = "Target Support Files/Pods-isNamyang/Pods-isNamyang.debug.xcconfig"; sourceTree = "<group>"; };
-		38F04B79239D563F003D7B0D /* isNamyang.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = isNamyang.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		38F04B79239D563F003D7B0D /* 남양유없.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "남양유없.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		38F04B7C239D5640003D7B0D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		38F04B7E239D5640003D7B0D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		38F04B80239D5640003D7B0D /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -59,8 +59,8 @@
 		38F04BA0239D5641003D7B0D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		38F04BAC239D5934003D7B0D /* CaptureView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaptureView.swift; sourceTree = "<group>"; };
 		38F04BEB239D943C003D7B0D /* Network.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Network.swift; sourceTree = "<group>"; };
-		38F04BED239E9FAA003D7B0D /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		38F04BEF239EAE86003D7B0D /* EffectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EffectView.swift; sourceTree = "<group>"; };
+		38F04BF1239EC0BD003D7B0D /* NetworkErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkErrorView.swift; sourceTree = "<group>"; };
 		3DA44C2B5AE41169486F8519 /* Pods_isNamyangTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_isNamyangTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4F9FA3CF0B6DED025EF17CE0 /* Pods-isNamyang-isNamyangUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-isNamyang-isNamyangUITests.release.xcconfig"; path = "Target Support Files/Pods-isNamyang-isNamyangUITests/Pods-isNamyang-isNamyangUITests.release.xcconfig"; sourceTree = "<group>"; };
 		572FA855388032CE52179218 /* Pods-isNamyang-isNamyangUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-isNamyang-isNamyangUITests.debug.xcconfig"; path = "Target Support Files/Pods-isNamyang-isNamyangUITests/Pods-isNamyang-isNamyangUITests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -124,7 +124,7 @@
 		38F04B7A239D563F003D7B0D /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				38F04B79239D563F003D7B0D /* isNamyang.app */,
+				38F04B79239D563F003D7B0D /* 남양유없.app */,
 				38F04B8F239D5641003D7B0D /* isNamyangTests.xctest */,
 				38F04B9A239D5641003D7B0D /* isNamyangUITests.xctest */,
 			);
@@ -136,7 +136,7 @@
 			children = (
 				38F04B7C239D5640003D7B0D /* AppDelegate.swift */,
 				38F04B7E239D5640003D7B0D /* SceneDelegate.swift */,
-				38F04BED239E9FAA003D7B0D /* LoadingView.swift */,
+				38F04BF1239EC0BD003D7B0D /* NetworkErrorView.swift */,
 				38F04B80239D5640003D7B0D /* ContentView.swift */,
 				38F04BEF239EAE86003D7B0D /* EffectView.swift */,
 				38F04BAC239D5934003D7B0D /* CaptureView.swift */,
@@ -207,7 +207,7 @@
 			);
 			name = isNamyang;
 			productName = isNamyang;
-			productReference = 38F04B79239D563F003D7B0D /* isNamyang.app */;
+			productReference = 38F04B79239D563F003D7B0D /* 남양유없.app */;
 			productType = "com.apple.product-type.application";
 		};
 		38F04B8E239D5641003D7B0D /* isNamyangTests */ = {
@@ -427,13 +427,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				38F04BF2239EC0BD003D7B0D /* NetworkErrorView.swift in Sources */,
 				38F04BEC239D943C003D7B0D /* Network.swift in Sources */,
 				38F04B7D239D5640003D7B0D /* AppDelegate.swift in Sources */,
 				38F04BF0239EAE86003D7B0D /* EffectView.swift in Sources */,
 				38F04BAD239D5934003D7B0D /* CaptureView.swift in Sources */,
 				38F04B7F239D5640003D7B0D /* SceneDelegate.swift in Sources */,
 				38F04B81239D5640003D7B0D /* ContentView.swift in Sources */,
-				38F04BEE239E9FAA003D7B0D /* LoadingView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -611,7 +611,7 @@
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = kr.nullfull.isNamyang;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "남양유없";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -632,7 +632,7 @@
 					"@executable_path/Frameworks",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = kr.nullfull.isNamyang;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "남양유없";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

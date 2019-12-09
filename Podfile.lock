@@ -2,25 +2,29 @@ PODS:
   - CocoaLumberjack (3.6.0):
     - CocoaLumberjack/Core (= 3.6.0)
   - CocoaLumberjack/Core (3.6.0)
+  - Fuse (1.2.0)
   - SVGKit (2.1.1):
     - CocoaLumberjack (~> 3.0)
   - SwiftCSV (0.5.5)
 
 DEPENDENCIES:
+  - Fuse
   - SVGKit
   - SwiftCSV
 
 SPEC REPOS:
   trunk:
     - CocoaLumberjack
+    - Fuse
     - SVGKit
     - SwiftCSV
 
 SPEC CHECKSUMS:
   CocoaLumberjack: 78b0c238666f4f58db069738ec176f4519557516
+  Fuse: 287bd95a5c8dbfe6c41af519eaf48856aa1a28f6
   SVGKit: 652cdf7bef8bec8564d04a8511d3ab50c7595fac
   SwiftCSV: 13e494244a4a65c3ff71002444491026de625643
 
-PODFILE CHECKSUM: 608dc1f2491c5afc9222b4be97410cbbc273a4ce
+PODFILE CHECKSUM: 7e722261b6657e81b8bb632e899f7fde6963e9ed
 
 COCOAPODS: 1.8.4
