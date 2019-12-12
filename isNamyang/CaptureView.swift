@@ -49,7 +49,7 @@ class CVCaptureView: UIView {
         _init()
     }
 
-    func _setup() -> Result<(), Error> {
+    func _setup() -> Result<Void, Error> {
         guard let videoCaptureDevice = AVCaptureDevice.default(for: .video) else {
             return .failure(CVCaptureViewError.noCaptureDevice)
         }
