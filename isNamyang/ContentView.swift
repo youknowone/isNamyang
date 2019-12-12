@@ -51,6 +51,14 @@ struct FrameView<Content: View>: View {
     }
 }
 
+extension String {
+    var isNumber: Bool {
+        CharacterSet.decimalDigits.isSuperset(of: CharacterSet(charactersIn: self))
+    }
+}
+
+import Combine
+
 struct MainView: View {
     @State var captureEnabled: Bool = false
     @State var capturing: Bool = false
@@ -63,12 +71,28 @@ struct MainView: View {
     @State var searchedItem: Item?
 
     var body: some View {
-        let captureView = CaptureView(capturing: $capturing)
-            .metadata(objectTypes: [.ean13, .ean8])
-            .onRead { AudioServicesPlaySystemSound(SystemSoundID(kSystemSoundID_Vibrate))
-                self.capturing = false
-                self.keyword = $0
-                self.checkKeyword()
+        let captureView = CaptureView(capturing: $capturing, metadataObjectTypes: [.ean8, .ean13], onRead: {
+            AudioServicesPlaySystemSound(SystemSoundID(kSystemSoundID_Vibrate))
+            self.capturing = false
+            self.keyword = $0
+            self.checkKeyword()
+        })
+        let enabledSubject = CurrentValueSubject<Bool, Never>(captureView.enabled)
+        _ = enabledSubject.receive(on: RunLoop.main)
+            .sink { value in
+                self.captureEnabled = value
+                if !value {
+                    self.capturing = false
+                }
+            }
+        let keywordSubject = CurrentValueSubject<String, Never>(keyword)
+        _ = keywordSubject.receive(on: RunLoop.main)
+            .sink { value in
+                if !value.isEmpty, !value.isNumber {
+                    self.searchResult = service.database.search(keyword: value)
+                } else {
+                    self.searchResult = nil
+                }
             }
 
         return VStack {
@@ -83,7 +107,8 @@ struct MainView: View {
                             if !self.captureEnabled {
                                 Text("카메라 권한에 동의하여야 바코드 스캔 기능을 이용할 수 있습니다. 카메라를 이용하지 않으려면 아래에서 수동으로 입력해 주세요\n")
                             }
-                            TextField("제품 이름이나 바코드 입력", text: self.$keyword, onCommit: self.checkKeyword)
+                            TextField("제품 이름이나 바코드 입력", text: self.$keyword,
+                                      onCommit: self.checkKeyword)
                                 .textFieldStyle(RoundedBorderTextFieldStyle())
                                 .padding()
                         }
@@ -140,6 +165,7 @@ struct MainView: View {
                         Text("남 양 유 없").font(.system(size: 80))
                             .fontWeight(.bold).padding()
                     }
+                    GADBanner(adUnitId: "ca-app-pub-7934160831494186/7572144128")
                 }
                 List {
                     ForEach(searchResult ?? [], id: \.self) {
@@ -161,8 +187,7 @@ struct MainView: View {
         .navigationBarTitle("")
         .navigationBarHidden(true)
         .onAppear {
-            self.captureEnabled = captureView.error == nil
-            self.capturing = self.captureEnabled
+            self.capturing = true
             withAnimation(.linear(duration: 1.2)) { self.toast.toggle() }
         }
         .sheet(isPresented: $showsResult) {
@@ -171,7 +196,7 @@ struct MainView: View {
     }
 
     func checkKeyword() {
-        let isBarcode = [9, 13].contains(keyword.count) && CharacterSet.decimalDigits.isSuperset(of: CharacterSet(charactersIn: keyword))
+        let isBarcode = [9, 13].contains(keyword.count) && keyword.isNumber
         if isBarcode {
             searchedItem = service.database.search(barcode: keyword)
             showsResult = true

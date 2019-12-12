@@ -28,6 +28,8 @@ class CVCaptureView: UIView {
         case unexpected // this is a library bug!
     }
 
+    var sessionError: Error?
+
     weak var delegate: CVCaptureViewDelegate? {
         didSet {
             reflectDelegate()
@@ -47,7 +49,7 @@ class CVCaptureView: UIView {
         _init()
     }
 
-    public func setup() -> Result<(), Error> {
+    func _setup() -> Result<(), Error> {
         guard let videoCaptureDevice = AVCaptureDevice.default(for: .video) else {
             return .failure(CVCaptureViewError.noCaptureDevice)
         }
@@ -67,6 +69,7 @@ class CVCaptureView: UIView {
         metadataOutput = AVCaptureMetadataOutput()
         guard let metadataOutput = metadataOutput else {
             assert(false)
+            return .failure(CVCaptureViewError.unexpected)
         }
 
         guard session.canAddOutput(metadataOutput) else {
@@ -95,6 +98,12 @@ class CVCaptureView: UIView {
 
         layer.session = session
         layer.videoGravity = .resizeAspectFill
+
+        do {
+            try _setup().get()
+        } catch {
+            sessionError = error
+        }
 
         #if targetEnvironment(simulator)
             backgroundColor = .lightGray
@@ -135,41 +144,36 @@ extension CVCaptureView: AVCaptureMetadataOutputObjectsDelegate {
     }
 }
 
-final class CaptureView {
-    var capturing: Binding<Bool>
+struct CaptureView {
+    @Binding var capturing: Bool
+    @State var metadataObjectTypes: [AVMetadataObject.ObjectType]
+    @State var metadataDispatchQueue = DispatchQueue.main
+    @State var onRead: ((String) -> Void)?
 
-    public var error: Error?
-    var metadataDispatchQueue = DispatchQueue.main
-    var metadataObjectTypes = [AVMetadataObject.ObjectType]()
-    var onRead: ((String) -> Void)?
-
-    init(capturing: Binding<Bool>) {
-        self.capturing = capturing
-    }
+    @State var enabled: Bool = true // AVCaptureDevice.default(for: .video) != nil
 }
 
 extension CaptureView: UIViewRepresentable {
     func makeUIView(context: Context) -> CVCaptureView {
         let view = CVCaptureView()
         view.delegate = context.coordinator
-        switch view.setup() {
-        case .success:
-            break
-        case let .failure(e):
-            error = e
+        if view.sessionError != nil {
+//            context.coordinator.enabled = false
         }
         return view
     }
 
-    func updateUIView(_ view: CVCaptureView, context _: Context) {
-        view.reflectDelegate()
-        guard error == nil else {
-            capturing.wrappedValue = false
+    func updateUIView(_ view: CVCaptureView, context: Context) {
+        guard context.coordinator.enabled else {
+            DispatchQueue.main.async {
+                context.coordinator.disable()
+            }
             return
         }
-        if capturing.wrappedValue {
+        view.reflectDelegate()
+        if capturing {
             if !view.session.isRunning {
-                view.session.startRunning()
+                // view.session.startRunning()
             }
         } else {
             if view.session.isRunning {
@@ -182,19 +186,9 @@ extension CaptureView: UIViewRepresentable {
         Coordinator(parent: self)
     }
 
-    public func metadata(objectTypes: [AVMetadataObject.ObjectType]) -> CaptureView {
-        metadataObjectTypes = objectTypes
-        assert(metadataObjectTypes == objectTypes)
-        return self
-    }
-
-    public func onRead(perform code: @escaping (String) -> Void) -> CaptureView {
-        onRead = code
-        return self
-    }
-
     class Coordinator: CVCaptureViewDelegate {
         var parent: CaptureView
+        var enabled: Bool = true
 
         init(parent: CaptureView) {
             self.parent = parent
@@ -207,6 +201,11 @@ extension CaptureView: UIViewRepresentable {
         func metadataObjectTypes(for _: CVCaptureView) -> [AVMetadataObject.ObjectType] {
             parent.metadataObjectTypes
         }
+
+        func disable() {
+            parent.enabled = false
+            parent.capturing = false
+        }
     }
 }
 
@@ -214,6 +213,8 @@ struct CaptureView_Preview: PreviewProvider {
     static var previews: some View {
         // simulator preview
 
-        CaptureView(capturing: .constant(true))
+        CaptureView(capturing: .constant(true), metadataObjectTypes: [.ean8, .ean13, .qr], onRead: {
+            _ in
+        })
     }
 }

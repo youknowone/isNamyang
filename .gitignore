@@ -3,4 +3,4 @@
 *.xcworkspace/xcuserdata
 */*.xcworkspace/xcuserdata
 Pods
-Hangulize/GoogleService-Info.plist
+isNamyang/GoogleService-Info.plist

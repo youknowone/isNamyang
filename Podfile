@@ -9,6 +9,10 @@ target 'isNamyang' do
   pod 'Fuse'
   pod 'SwiftCSV'
   pod 'SVGKit'
+  pod 'Crashlytics'
+  pod 'Firebase/Analytics'
+  pod 'Firebase/AdMob'
+  pod 'Firebase/Performance'
 
   target 'isNamyangTests' do
     inherit! :search_paths
